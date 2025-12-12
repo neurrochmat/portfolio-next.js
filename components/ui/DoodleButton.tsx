@@ -38,7 +38,7 @@ export function DoodleButton({
 
     const content = (
         <SketchBorder
-            strokeColor={variant === "primary" ? "#18181b" : "#a3e635"}
+            strokeColor={variant === "primary" ? "#18181b" : "#18181b"}
             strokeWidth={2}
             roughness={1}
             className="inline-block hover:animate-wobble motion-reduce:hover:animate-none"

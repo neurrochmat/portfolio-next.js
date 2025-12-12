@@ -44,7 +44,7 @@ export function Highlight({
     }, [isVisible, delay, reducedMotion]);
 
     return (
-        <span ref={ref} className="inline">
+        <span ref={ref} className="inline text-inherit">
             <RoughNotation
                 type={type}
                 show={show}
