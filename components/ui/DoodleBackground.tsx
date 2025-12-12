@@ -5,7 +5,7 @@ export function DoodleBackground() {
         <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none text-zinc-900 dark:text-white">
             {/* Subtle dot pattern */}
             <div
-                className="absolute inset-0 opacity-[0.08] dark:opacity-[0.12]"
+                className="absolute inset-0 opacity-[0.12] dark:opacity-[0.08]"
                 style={{
                     backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
                     backgroundSize: "24px 24px",
