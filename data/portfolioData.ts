@@ -5,7 +5,7 @@ export const personalInfo = {
   nick: "neurrochmat",
   title: "Fullstack & Mobile Developer · Applied AI & IoT",
   roleHeadline: "Engineering decoupled web platforms, cross-platform mobile apps, and edge intelligence systems.",
-  bio: "Informatics Engineering graduate from Politeknik Negeri Semarang with GPA 3.85 / 4.00. Experienced in architecting decoupled backend services with Laravel 11/13, high-performance interfaces with Next.js 16, cross-platform mobile applications with Flutter, and on-device machine learning pipelines with TensorFlow Lite. Experienced deploying production applications on Microsoft Azure VM and Google Cloud Run.",
+  bio: "Informatics Engineering graduate from Politeknik Negeri Semarang with GPA 3.87 / 4.00. Experienced in architecting decoupled backend services with Laravel 11/13, high-performance interfaces with Next.js 16, cross-platform mobile applications with Flutter, and on-device machine learning pipelines with TensorFlow Lite. Experienced deploying production applications on Microsoft Azure VM and Google Cloud Run.",
   location: "Semarang, Central Java, Indonesia",
   timezone: "WIB (UTC+7)",
   email: "neurrochmat6@gmail.com",
@@ -26,7 +26,7 @@ export const personalInfo = {
     "Teamwork & Collaboration"
   ],
   stats: [
-    { label: "Academic GPA", value: "3.85", sub: "Politeknik Negeri Semarang" },
+    { label: "Academic GPA", value: "3.87", sub: "Politeknik Negeri Semarang" },
     { label: "Production Apps", value: "8+", sub: "Web, Mobile, AI/IoT" },
     { label: "Enterprise Experience", value: "Citiasia", sub: "Fullstack Developer Intern" },
     { label: "Verified Credentials", value: "8", sub: "Oracle, MikroTik & Dicoding" },
@@ -285,7 +285,7 @@ export const educationData: EducationItem = {
   institution: "Politeknik Negeri Semarang",
   degree: "Associate Degree in Informatics Engineering",
   major: "Teknik Informatika",
-  gpa: "3.85 / 4.00",
+  gpa: "3.87 / 4.00",
   period: "Sep 2023 – Sep 2026",
   location: "Semarang City, Central Java",
   coursework: [

@@ -26,7 +26,7 @@ export function Footer() {
             </Link>
 
             <p className="text-xs sm:text-sm text-muted-foreground max-w-md leading-relaxed">
-              Informatics Engineering graduate from Politeknik Negeri Semarang (GPA 3.85 / 4.00). Engineering decoupled web architectures, cross-platform mobile apps, and edge intelligence systems.
+              Informatics Engineering graduate from Politeknik Negeri Semarang (GPA 3.87 / 4.00). Engineering decoupled web architectures, cross-platform mobile apps, and edge intelligence systems.
             </p>
 
             {/* Tribute Pill Badge */}
@@ -68,8 +68,8 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-primary transition-colors hover:underline">
-                  Recruiter FAQ
+                <a href="#contact" className="hover:text-primary transition-colors hover:underline">
+                  Contact
                 </a>
               </li>
             </ul>
