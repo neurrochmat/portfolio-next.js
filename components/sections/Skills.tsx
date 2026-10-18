@@ -1,84 +1,77 @@
-"use client";
-
-import { Highlight } from "@/components/ui/Highlight";
-import { SketchBorder } from "@/components/ui/SketchBorder";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-
-const skillCategories = [
-    {
-        title: "Frontend",
-        skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Vue.js", "HTML/CSS"],
-    },
-    {
-        title: "Backend",
-        skills: ["Node.js", "Express", "Python", "PostgreSQL", "MongoDB", "REST APIs"],
-    },
-    {
-        title: "Tools & Others",
-        skills: ["Git", "Docker", "Figma", "VS Code", "Linux", "CI/CD"],
-    },
-];
-
-function SkillChip({ skill, index }: { skill: string; index: number }) {
-    const [ref, isVisible] = useIntersectionObserver<HTMLDivElement>({
-        threshold: 0.1,
-    });
-
-    return (
-        <div
-            ref={ref}
-            className={`transition-all duration-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
-            style={{ transitionDelay: `${index * 50}ms` }}
-        >
-            <SketchBorder
-                strokeColor="#a3e635"
-                strokeWidth={1.5}
-                roughness={2}
-                className="inline-block hover:animate-wobble motion-reduce:hover:animate-none"
-            >
-                <span className="block px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900">
-                    {skill}
-                </span>
-            </SketchBorder>
-        </div>
-    );
-}
+import { Server, Smartphone, Cloud, Wrench, CheckCircle } from "lucide-react";
+import { skillsCategories } from "@/data/portfolioData";
+import { NuclearCard } from "@/components/ui/NuclearCard";
+import { NuclearBadge } from "@/components/ui/NuclearBadge";
 
 export function Skills() {
-    return (
-        <section id="skills" className="py-20 px-6">
-            <div className="max-w-4xl mx-auto">
-                {/* Section Title */}
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center font-heading text-zinc-900 dark:text-white">
-                    <Highlight type="underline" color="#a3e635" strokeWidth={3}>
-                        Skills & Tools
-                    </Highlight>
-                </h2>
+  const categoryIcons = [Server, Smartphone, Cloud, Wrench];
+  const badgeColors: ("pink" | "yellow" | "green" | "blue")[] = ["pink", "yellow", "green", "blue"];
 
-                <div className="space-y-12">
-                    {skillCategories.map((category) => (
-                        <div key={category.title}>
-                            <h3 className="text-xl font-bold mb-6 text-zinc-800 dark:text-zinc-200 font-heading flex items-center gap-2">
-                                <span className="w-8 h-0.5 bg-lime-400" />
-                                {category.title}
-                            </h3>
-                            <div className="flex flex-wrap gap-3">
-                                {category.skills.map((skill, index) => (
-                                    <SkillChip key={skill} skill={skill} index={index} />
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+  return (
+    <section id="skills" className="relative w-full py-16 md:py-24 bg-background border-t-2 border-border">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="mb-12 text-center">
+          <span className="font-heading text-xs font-bold tracking-[0.3em] uppercase text-primary bg-muted border-2 border-border px-3 py-1 rounded-md shadow-[2px_2px_0px_var(--shadow-color)] inline-block mb-3">
+            Core Arsenal & Stack
+          </span>
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-foreground">
+            Skills & <span className="heading-accent">Capabilities</span>
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            Battle-tested technologies across server architectures, client runtimes, containerization, and edge intelligence.
+          </p>
+        </div>
 
-                {/* Fun note */}
-                <div className="mt-16 text-center">
-                    <p className="text-zinc-500 dark:text-zinc-500 italic">
-                        ...and always learning something new! 🚀
+        {/* 4 Modular Bento Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          {skillsCategories.map((category, idx) => {
+            const Icon = categoryIcons[idx] || Server;
+            const badgeColor = badgeColors[idx % badgeColors.length];
+
+            return (
+              <NuclearCard
+                key={category.title}
+                badge={`Module 0${idx + 1}`}
+                badgeColor={badgeColor}
+                windowHeader
+                windowTitle={category.title}
+                className="space-y-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md border-2 border-border bg-background shadow-[2px_2px_0px_var(--shadow-color)]">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-lg sm:text-xl font-black uppercase text-foreground">
+                      {category.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      {category.description}
                     </p>
+                  </div>
                 </div>
-            </div>
-        </section>
-    );
+
+                <div className="pt-2 flex flex-wrap gap-2">
+                  {category.skills.map((skill) => (
+                    <span
+                      key={skill.name}
+                      className={`inline-flex items-center gap-1.5 rounded-md border-2 border-border px-2.5 py-1 text-xs font-mono font-bold uppercase transition-transform hover:-translate-y-0.5 select-none ${
+                        skill.highlight
+                          ? "bg-primary text-primary-foreground shadow-[2px_2px_0px_var(--shadow-color)]"
+                          : "bg-background text-foreground shadow-[1px_1px_0px_var(--shadow-color)]"
+                      }`}
+                    >
+                      {skill.highlight && <span className="text-accent-yellow">★</span>}
+                      <span>{skill.name}</span>
+                    </span>
+                  ))}
+                </div>
+              </NuclearCard>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 }

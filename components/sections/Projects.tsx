@@ -1,157 +1,200 @@
 "use client";
 
 import { useState } from "react";
-import { Highlight } from "@/components/ui/Highlight";
-import { DoodleCard } from "@/components/ui/DoodleCard";
-import { SketchBorder } from "@/components/ui/SketchBorder";
-import { projects, allTags, Project } from "@/data/projects";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-
-function ProjectCard({ project, index }: { project: Project; index: number }) {
-    const [ref, isVisible] = useIntersectionObserver<HTMLDivElement>({
-        threshold: 0.1,
-    });
-
-    return (
-        <div
-            ref={ref}
-            className={`transition-all duration-500 ${isVisible
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-            style={{ transitionDelay: `${index * 100}ms` }}
-        >
-            <DoodleCard className="h-full flex flex-col">
-                <div className="flex-1">
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-3">
-                        {project.tags.map((tag) => (
-                            <span
-                                key={tag}
-                                className="text-xs font-medium px-2 py-1 bg-lime-100 dark:bg-lime-900/30 text-lime-700 dark:text-lime-400 rounded-full"
-                            >
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-white font-heading">
-                        {project.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-sm leading-relaxed">
-                        {project.description}
-                    </p>
-
-                    {/* Tech Stack */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                        {project.techStack.map((tech) => (
-                            <span
-                                key={tech}
-                                className="text-xs font-mono px-2 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded"
-                            >
-                                {tech}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Links */}
-                <div className="flex gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                    {project.demoUrl && (
-                        <a
-                            href={project.demoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-1"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                            Demo
-                        </a>
-                    )}
-                    {project.repoUrl && (
-                        <a
-                            href={project.repoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:underline flex items-center gap-1"
-                        >
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-                            Code
-                        </a>
-                    )}
-                </div>
-            </DoodleCard>
-        </div>
-    );
-}
+import Image from "next/image";
+import { ExternalLink, Layers, ArrowUpRight, Check, Sparkles, Filter } from "lucide-react";
+import { GithubIcon } from "@/components/ui/SocialIcons";
+import { projectsData } from "@/data/portfolioData";
+import { Project, ProjectCategory } from "@/data/types";
+import { NuclearBadge } from "@/components/ui/NuclearBadge";
+import { NuclearButton } from "@/components/ui/NuclearButton";
+import { ProjectModal } from "@/components/ui/ProjectModal";
 
 export function Projects() {
-    const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>("all");
+  const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
 
-    const filteredProjects = selectedTag
-        ? projects.filter((p) => p.tags.includes(selectedTag))
-        : projects;
+  const categories: { label: string; value: ProjectCategory; count: number }[] = [
+    { label: "All Projects", value: "all", count: projectsData.length },
+    { label: "Web Fullstack", value: "web", count: projectsData.filter((p) => p.category === "web").length },
+    { label: "Mobile Apps", value: "mobile", count: projectsData.filter((p) => p.category === "mobile").length },
+    { label: "Edge AI & IoT", value: "ai-iot", count: projectsData.filter((p) => p.category === "ai-iot").length }
+  ];
 
-    return (
-        <section id="projects" className="py-20 px-6 bg-zinc-50/50 dark:bg-zinc-900/50">
-            <div className="max-w-6xl mx-auto">
-                {/* Section Title */}
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center font-heading text-zinc-900 dark:text-white">
-                    <Highlight type="box" color="#a3e635" strokeWidth={2}>
-                        Projects
-                    </Highlight>
-                </h2>
+  const filteredProjects =
+    selectedCategory === "all"
+      ? projectsData
+      : projectsData.filter((p) => p.category === selectedCategory);
 
-                <p className="text-center text-zinc-600 dark:text-zinc-400 mb-10 max-w-2xl mx-auto">
-                    A collection of things I&apos;ve built. Each project is a new adventure!
-                </p>
+  return (
+    <section id="projects" className="relative w-full py-16 md:py-24 bg-background border-t-2 border-border">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="mb-10 text-center">
+          <span className="font-heading text-xs font-bold tracking-[0.3em] uppercase text-primary bg-muted border-2 border-border px-3 py-1 rounded-md shadow-[2px_2px_0px_var(--shadow-color)] inline-block mb-3">
+            Production & Research Works
+          </span>
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-foreground">
+            Featured <span className="heading-accent">Projects</span>
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            Architected decoupled systems, mobile clients, and embedded AI engines deployed to production environments.
+          </p>
+        </div>
 
-                {/* Filter Tags */}
-                <div className="flex flex-wrap justify-center gap-3 mb-12">
-                    <button
-                        onClick={() => setSelectedTag(null)}
-                        className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${selectedTag === null
-                                ? "bg-lime-500 text-white"
-                                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                            }`}
-                    >
-                        All
-                    </button>
-                    {allTags.map((tag) => (
-                        <SketchBorder
-                            key={tag}
-                            strokeColor={selectedTag === tag ? "#a3e635" : "transparent"}
-                            strokeWidth={1.5}
-                            roughness={1}
-                            className="inline-block"
+        {/* Filter Pills Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-10 select-none">
+          {categories.map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => setSelectedCategory(cat.value)}
+              className={`inline-flex items-center gap-1.5 rounded-md border-2 border-border px-3.5 py-1.5 font-heading text-xs sm:text-sm font-black uppercase tracking-wider transition-all duration-150 cursor-pointer ${
+                selectedCategory === cat.value
+                  ? "bg-primary text-primary-foreground shadow-[3px_3px_0px_var(--shadow-color)] -translate-y-0.5"
+                  : "bg-muted text-foreground hover:bg-muted/80 shadow-[2px_2px_0px_var(--shadow-color)]"
+              }`}
+            >
+              <span>{cat.label}</span>
+              <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
+                selectedCategory === cat.value ? "bg-black/20 text-white" : "bg-background text-muted-foreground"
+              }`}>
+                {cat.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {filteredProjects.map((project) => (
+            <div
+              key={project.id}
+              className="nuclear-card-interactive flex flex-col justify-between overflow-hidden bg-muted p-0 shadow-[5px_5px_0px_var(--shadow-color)] group"
+            >
+              <div>
+                {/* Window Top Bar */}
+                <div className="flex items-center justify-between border-b-2 border-border bg-background px-3 py-2 select-none">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full border border-border bg-red-400 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full border border-border bg-yellow-400 inline-block" />
+                    <span className="w-2.5 h-2.5 rounded-full border border-border bg-green-400 inline-block" />
+                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground truncate">
+                    {project.categoryLabel}
+                  </span>
+                  <div className="text-[10px] font-mono font-bold text-primary">
+                    {project.period.split("–")[0].trim()}
+                  </div>
+                </div>
+
+                {/* Project Image Preview */}
+                <div className="relative aspect-video w-full overflow-hidden border-b-2 border-border bg-background">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 380px"
+                  />
+                  {project.featured && (
+                    <div className="absolute top-2.5 right-2.5">
+                      <NuclearBadge color="yellow" size="sm">
+                        ★ Featured
+                      </NuclearBadge>
+                    </div>
+                  )}
+                </div>
+
+                {/* Card Content */}
+                <div className="p-4 sm:p-5 space-y-3.5">
+                  <div>
+                    <h3 className="font-heading text-lg sm:text-xl font-black uppercase text-foreground leading-snug">
+                      {project.title}
+                    </h3>
+                    <p className="font-mono text-[11px] font-bold text-primary uppercase mt-0.5">
+                      {project.subtitle}
+                    </p>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                    {project.summary}
+                  </p>
+
+                  {/* Architecture Metrics Badges */}
+                  {project.metrics && project.metrics.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {project.metrics.slice(0, 2).map((metric, i) => (
+                        <span
+                          key={i}
+                          className="inline-flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 text-[10px] font-mono font-bold text-foreground"
                         >
-                            <button
-                                onClick={() => setSelectedTag(tag)}
-                                className={`px-4 py-2 text-sm font-medium transition-all ${selectedTag === tag
-                                        ? "text-lime-600 dark:text-lime-400"
-                                        : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                                    }`}
-                            >
-                                {tag}
-                            </button>
-                        </SketchBorder>
-                    ))}
-                </div>
+                          <span className="text-primary">•</span>
+                          <span>{metric.value}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
-                {/* Projects Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredProjects.map((project, index) => (
-                        <ProjectCard key={project.id} project={project} index={index} />
+                  {/* Stack Chips */}
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {project.stack.slice(0, 5).map((tech) => (
+                      <NuclearBadge key={tech} color="muted" size="sm">
+                        {tech}
+                      </NuclearBadge>
                     ))}
+                    {project.stack.length > 5 && (
+                      <span className="text-[10px] font-mono text-muted-foreground self-center px-1">
+                        +{project.stack.length - 5}
+                      </span>
+                    )}
+                  </div>
                 </div>
+              </div>
+
+              {/* Card Footer Actions */}
+              <div className="p-4 sm:p-5 pt-0 border-t border-border/20 mt-3 flex items-center justify-between gap-2">
+                <button
+                  onClick={() => setActiveModalProject(project)}
+                  className="nuclear-btn bg-background text-foreground text-xs flex-1 py-1.5"
+                >
+                  <Layers className="h-3.5 w-3.5 text-primary" />
+                  <span>Specs</span>
+                </button>
+
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="nuclear-btn bg-accent-green text-foreground text-xs px-2.5 py-1.5"
+                    title="Live Demo"
+                  >
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                )}
+
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="nuclear-btn bg-muted text-foreground text-xs px-2.5 py-1.5"
+                    title="GitHub Repository"
+                  >
+                    <GithubIcon className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
             </div>
-        </section>
-    );
+          ))}
+        </div>
+      </div>
+
+      {/* Project Inspector Modal */}
+      <ProjectModal
+        project={activeModalProject}
+        onClose={() => setActiveModalProject(null)}
+      />
+    </section>
+  );
 }

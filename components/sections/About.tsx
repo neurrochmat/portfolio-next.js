@@ -1,107 +1,135 @@
-"use client";
-
-import { Highlight } from "@/components/ui/Highlight";
-import { DoodleCard } from "@/components/ui/DoodleCard";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import Image from "next/image";
+import { MapPin, Clock, Award, Briefcase, GraduationCap, Sparkles, CheckCircle2 } from "lucide-react";
+import { NuclearCard } from "@/components/ui/NuclearCard";
+import { NuclearBadge } from "@/components/ui/NuclearBadge";
+import { personalInfo, educationData } from "@/data/portfolioData";
 
 export function About() {
-    const [ref, isVisible] = useIntersectionObserver<HTMLElement>({
-        threshold: 0.2,
-    });
+  return (
+    <section id="about" className="relative w-full py-16 md:py-24 bg-background border-t-2 border-border">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="mb-12 text-center">
+          <span className="font-heading text-xs font-bold tracking-[0.3em] uppercase text-primary bg-muted border-2 border-border px-3 py-1 rounded-md shadow-[2px_2px_0px_var(--shadow-color)] inline-block mb-3">
+            Profile & Architecture
+          </span>
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-foreground">
+            About <span className="heading-accent">The Developer</span>
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+            A developer who bridges the gap between resilient backend infrastructure, fluid frontend/mobile experiences, and on-device intelligent systems.
+          </p>
+        </div>
 
-    return (
-        <section
-            id="about"
-            ref={ref}
-            className="py-20 px-6"
-        >
-            <div className="max-w-4xl mx-auto">
-                {/* Section Title */}
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center font-heading text-zinc-900 dark:text-white">
-                    <Highlight type="circle" color="#a3e635" strokeWidth={2}>
-                        About Me
-                    </Highlight>
-                </h2>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-8 items-start">
+          {/* Left Column: Profile Card & Location */}
+          <NuclearCard badge="Developer Profile" badgeColor="yellow" className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-center gap-5">
+              <div className="relative h-28 w-28 sm:h-32 sm:w-32 shrink-0 overflow-hidden rounded-md border-2 border-border shadow-[3px_3px_0px_var(--shadow-color)]">
+                <Image
+                  src={personalInfo.profilePhoto}
+                  alt={personalInfo.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
 
-                <div className={`grid md:grid-cols-2 gap-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                    {/* Main intro */}
-                    <DoodleCard className="md:col-span-2">
-                        <div className="space-y-4 text-zinc-700 dark:text-zinc-300">
-                            <p className="text-lg leading-relaxed">
-                                👋 Hello! I&apos;m a <strong>passionate developer</strong> who enjoys
-                                crafting delightful digital experiences. With a keen eye for design
-                                and a love for clean code, I build things that are both beautiful
-                                and functional.
-                            </p>
-                            <p className="text-lg leading-relaxed">
-                                I believe in the power of <em>simplicity</em> and the importance of
-                                attention to detail. When I&apos;m not coding, you&apos;ll find me
-                                sketching ideas, exploring new technologies, or enjoying a good cup
-                                of coffee ☕
-                            </p>
-                        </div>
-                    </DoodleCard>
-
-                    {/* Currently Building */}
-                    <DoodleCard>
-                        <h3 className="text-xl font-bold mb-4 font-heading text-zinc-900 dark:text-white flex items-center gap-2">
-                            <span>🔨</span>
-                            <Highlight type="underline" color="#a3e635">
-                                Currently Building
-                            </Highlight>
-                        </h3>
-                        <ul className="space-y-3 text-zinc-600 dark:text-zinc-400">
-                            <li className="flex items-start gap-2">
-                                <span className="text-lime-500 mt-1">→</span>
-                                <span>A SaaS product for creative teams</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="text-lime-500 mt-1">→</span>
-                                <span>Open-source design system</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="text-lime-500 mt-1">→</span>
-                                <span>Interactive learning platform</span>
-                            </li>
-                        </ul>
-                    </DoodleCard>
-
-                    {/* What I Enjoy */}
-                    <DoodleCard>
-                        <h3 className="text-xl font-bold mb-4 font-heading text-zinc-900 dark:text-white flex items-center gap-2">
-                            <span>✨</span>
-                            <Highlight type="underline" color="#a3e635">
-                                What I Enjoy
-                            </Highlight>
-                        </h3>
-                        <ul className="space-y-3 text-zinc-600 dark:text-zinc-400">
-                            <li className="flex items-start gap-2">
-                                <span className="text-lime-500 mt-1">♡</span>
-                                <span>Creating smooth UI animations</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="text-lime-500 mt-1">♡</span>
-                                <span>Solving complex problems elegantly</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="text-lime-500 mt-1">♡</span>
-                                <span>Learning and sharing knowledge</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="text-lime-500 mt-1">♡</span>
-                                <span>Building accessible interfaces</span>
-                            </li>
-                        </ul>
-                    </DoodleCard>
+              <div className="text-center sm:text-left space-y-1.5">
+                <h3 className="font-heading text-xl sm:text-2xl font-black uppercase text-foreground">
+                  {personalInfo.name}
+                </h3>
+                <div className="font-mono text-xs font-bold text-primary">
+                  @{personalInfo.nick}
                 </div>
-
-                {/* Handwritten note style decoration */}
-                <div className="mt-12 text-center">
-                    <p className="font-handwriting text-xl text-zinc-500 dark:text-zinc-500 italic">
-                        &quot;Code is poetry written for machines to execute and humans to admire.&quot;
-                    </p>
+                <div className="inline-flex items-center gap-1.5 rounded bg-accent-green/20 border border-accent-green text-foreground px-2 py-0.5 text-xs font-mono font-bold">
+                  <span className="w-2 h-2 rounded-full bg-accent-green animate-pulse" />
+                  <span>{personalInfo.status}</span>
                 </div>
+              </div>
             </div>
-        </section>
-    );
+
+            <div className="space-y-3 pt-3 border-t-2 border-border font-mono text-xs">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <MapPin className="h-4 w-4 text-primary shrink-0" />
+                <span>{personalInfo.location}</span>
+              </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Clock className="h-4 w-4 text-accent-yellow shrink-0" />
+                <span>Timezone: {personalInfo.timezone}</span>
+              </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <GraduationCap className="h-4 w-4 text-accent-blue shrink-0" />
+                <span>{educationData.institution} (GPA {educationData.gpa})</span>
+              </div>
+            </div>
+
+            {/* Soft Skills Badges */}
+            <div className="space-y-2 pt-2">
+              <div className="font-heading font-black text-xs uppercase text-muted-foreground">
+                Core Competencies & Soft Skills
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {personalInfo.softSkills.map((skill) => (
+                  <NuclearBadge key={skill} color="muted" size="sm">
+                    {skill}
+                  </NuclearBadge>
+                ))}
+              </div>
+            </div>
+          </NuclearCard>
+
+          {/* Right Column: In-depth Narrative & Highlights Bento */}
+          <div className="space-y-6">
+            <NuclearCard badge="Engineering Summary" badgeColor="pink">
+              <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
+                {personalInfo.bio}
+              </p>
+
+              <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t-2 border-border">
+                <div className="rounded border-2 border-border bg-background p-3 shadow-[2px_2px_0px_var(--shadow-color)]">
+                  <div className="flex items-center gap-1.5 font-heading font-black text-xs uppercase text-primary">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Enterprise Proven</span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Developed smart city GIS, waste management APIs, and Midtrans payment integrations at PT Citiasia International.
+                  </p>
+                </div>
+
+                <div className="rounded border-2 border-border bg-background p-3 shadow-[2px_2px_0px_var(--shadow-color)]">
+                  <div className="flex items-center gap-1.5 font-heading font-black text-xs uppercase text-accent-green">
+                    <Sparkles className="h-4 w-4" />
+                    <span>Edge Intelligence</span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Quantized TensorFlow models to TFLite for zero-latency, sub-50ms offline classification on Android camera streams.
+                  </p>
+                </div>
+              </div>
+            </NuclearCard>
+
+            {/* Principles Checklist */}
+            <NuclearCard badge="Development Philosophy" badgeColor="green">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  "Decoupled REST APIs with strictly validated schemas",
+                  "Type-safe frontends with Next.js 16 & TypeScript",
+                  "Cross-platform Flutter parity for iOS and Android",
+                  "Automated escrow and webhook security with Xendit",
+                  "Real-time event broadcasting via Laravel Reverb",
+                  "Production-grade container deployment with Docker & Azure"
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-2 text-xs sm:text-sm text-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </NuclearCard>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

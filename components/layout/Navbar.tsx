@@ -1,157 +1,163 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { SketchBorder } from "@/components/ui/SketchBorder";
+import { useState } from "react";
+import Link from "next/link";
+import { FileText, Menu, X, MessageSquare, Terminal, ExternalLink } from "lucide-react";
+import { GithubIcon } from "@/components/ui/SocialIcons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { cn } from "@/lib/utils";
-
-const navItems = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Projects", href: "#projects" },
-    { label: "Skills", href: "#skills" },
-    { label: "Experience", href: "#experience" },
-    { label: "Contact", href: "#contact" },
-];
+import { personalInfo } from "@/data/portfolioData";
 
 export function Navbar() {
-    const [activeSection, setActiveSection] = useState("home");
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            // Check if scrolled past threshold
-            setIsScrolled(window.scrollY > 50);
+  const navLinks = [
+    { label: "About", href: "#about" },
+    { label: "Projects", href: "#projects" },
+    { label: "Experience", href: "#experience" },
+    { label: "Skills", href: "#skills" },
+    { label: "Credentials", href: "#credentials" },
+    { label: "FAQ", href: "#faq" },
+    { label: "Contact", href: "#contact" }
+  ];
 
-            // Find active section based on scroll position
-            const sections = navItems.map((item) => item.href.replace("#", ""));
-
-            for (const section of sections.reverse()) {
-                const element = document.getElementById(section);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    if (rect.top <= 150) {
-                        setActiveSection(section);
-                        break;
-                    }
-                }
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    const handleNavClick = (href: string) => {
-        setIsMobileMenuOpen(false);
-        const element = document.getElementById(href.replace("#", ""));
-        if (element) {
-            element.scrollIntoView({ behavior: "smooth" });
-        }
-    };
-
-    return (
-        <header
-            className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                isScrolled
-                    ? "bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm shadow-sm"
-                    : "bg-transparent"
-            )}
+  return (
+    <header className="sticky top-0 z-40 w-full border-b-2 border-border bg-muted/95 backdrop-blur-md select-none">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Brand / Logo */}
+        <Link
+          href="/"
+          className="group flex items-center gap-2.5 transition-transform active:scale-95"
         >
-            <nav className="max-w-6xl mx-auto px-6 py-4">
-                <div className="flex items-center justify-between">
-                    {/* Logo */}
-                    <a
-                        href="#home"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleNavClick("#home");
-                        }}
-                        className="text-xl font-bold font-heading text-zinc-900 dark:text-white hover:text-lime-600 dark:hover:text-lime-400 transition-colors"
-                    >
-                        <span className="text-lime-500">{"<"}</span>
-                        Portfolio
-                        <span className="text-lime-500">{"/>"}</span>
-                    </a>
+          <div className="flex h-9 w-9 items-center justify-center rounded-md border-2 border-border bg-primary font-heading font-black text-primary-foreground shadow-[2px_2px_0px_var(--shadow-color)] transition-transform group-hover:rotate-6">
+            NR
+          </div>
+          <div className="flex flex-col">
+            <span className="font-heading text-base sm:text-lg font-black uppercase tracking-wider text-foreground">
+              {personalInfo.nick}
+            </span>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-primary">
+              Fullstack & AI/IoT
+            </span>
+          </div>
+        </Link>
 
-                    {/* Desktop Navigation */}
-                    <ul className="hidden md:flex items-center gap-1">
-                        {navItems.map((item) => (
-                            <li key={item.href}>
-                                <a
-                                    href={item.href}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleNavClick(item.href);
-                                    }}
-                                    className={cn(
-                                        "relative px-4 py-2 text-sm font-medium transition-colors",
-                                        activeSection === item.href.replace("#", "")
-                                            ? "text-lime-600 dark:text-lime-400"
-                                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                                    )}
-                                >
-                                    {item.label}
-                                    {activeSection === item.href.replace("#", "") && (
-                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-lime-500 rounded-full" />
-                                    )}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-6">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="font-heading text-sm font-black tracking-widest uppercase text-foreground hover:text-primary transition-colors hover:underline decoration-2 underline-offset-6"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
 
-                    {/* Theme Toggle & Mobile Menu */}
-                    <div className="flex items-center gap-2">
-                        <ThemeToggle />
+        {/* Desktop Actions */}
+        <div className="hidden sm:flex items-center gap-2.5">
+          {/* GitHub Star Pill */}
+          <a
+            href={personalInfo.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nuclear-btn bg-background text-foreground h-9 px-3 text-xs gap-1.5"
+            title="GitHub Profile"
+          >
+            <GithubIcon className="h-4 w-4" />
+            <span className="hidden xl:inline">GitHub</span>
+          </a>
 
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="md:hidden p-2 text-zinc-600 dark:text-zinc-400"
-                            aria-label="Toggle menu"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {isMobileMenuOpen ? (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                ) : (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                                )}
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+          {/* WhatsApp / Chat */}
+          <a
+            href={personalInfo.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nuclear-btn bg-accent-green text-foreground h-9 px-3 text-xs gap-1.5"
+            title="Chat on WhatsApp"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden md:inline">Let&apos;s Talk</span>
+          </a>
 
-                {/* Mobile Navigation */}
-                {isMobileMenuOpen && (
-                    <div className="md:hidden mt-4 pb-4">
-                        <SketchBorder strokeColor="#a3e635" strokeWidth={1.5} roughness={1}>
-                            <ul className="bg-white dark:bg-zinc-900 py-2">
-                                {navItems.map((item) => (
-                                    <li key={item.href}>
-                                        <a
-                                            href={item.href}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleNavClick(item.href);
-                                            }}
-                                            className={cn(
-                                                "block px-4 py-3 text-sm font-medium transition-colors",
-                                                activeSection === item.href.replace("#", "")
-                                                    ? "text-lime-600 dark:text-lime-400 bg-lime-50 dark:bg-lime-900/20"
-                                                    : "text-zinc-600 dark:text-zinc-400"
-                                            )}
-                                        >
-                                            {item.label}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </SketchBorder>
-                    </div>
-                )}
-            </nav>
-        </header>
-    );
+          {/* Resume PDF */}
+          <a
+            href={personalInfo.resumePdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nuclear-btn bg-primary text-primary-foreground h-9 px-3 text-xs gap-1.5"
+            title="Download CV"
+          >
+            <FileText className="h-4 w-4" />
+            <span>CV</span>
+          </a>
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
+        </div>
+
+        {/* Mobile Hamburger & Theme Toggle */}
+        <div className="flex items-center gap-2 sm:hidden">
+          <ThemeToggle />
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="inline-flex items-center justify-center rounded-md border-2 border-border bg-background p-2 text-foreground shadow-[2px_2px_0px_var(--shadow-color)]"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="border-t-2 border-border bg-muted px-4 py-6 sm:hidden animate-in slide-in-from-top-2 duration-150">
+          <div className="flex flex-col gap-3">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="font-heading text-base font-black tracking-widest uppercase text-foreground hover:text-primary transition-colors py-1.5 border-b border-border/20"
+              >
+                {link.label}
+              </a>
+            ))}
+
+            <div className="pt-4 flex flex-col gap-2.5">
+              <a
+                href={personalInfo.resumePdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nuclear-btn bg-primary text-primary-foreground text-sm w-full py-2.5"
+              >
+                <FileText className="h-4 w-4" />
+                <span>Download Resume / CV</span>
+              </a>
+
+              <a
+                href={personalInfo.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nuclear-btn bg-accent-green text-foreground text-sm w-full py-2.5"
+              >
+                <MessageSquare className="h-4 w-4" />
+                <span>Chat on WhatsApp</span>
+              </a>
+
+              <a
+                href={personalInfo.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nuclear-btn bg-background text-foreground text-sm w-full py-2.5"
+              >
+                <GithubIcon className="h-4 w-4" />
+                <span>GitHub @neurrochmat</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  );
 }
